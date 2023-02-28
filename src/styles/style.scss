@@ -1,0 +1,13 @@
+@use 'sass:math';
+
+@function pxtorem($px) {
+    @return math.div($px, 750) * 30rem;
+}
+
+body {
+    max-width: 750px;
+    background: linear-gradient(125deg, #504c4b, #2b292a, #121212) ;
+}
+
+@import '_common.scss';
+@import '_cjy.scss';
