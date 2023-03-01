@@ -48,13 +48,14 @@
                                 <a class="next js-next" @click.stop="updatePlayParam(1)"></a>
                             </div>
 
-                            <div class="lrcs-wrap">
-                                <ul class="lrcs-wrap-inner" ref="ulRef" :style="{'transform': 'translateY(' + lyricTop + ')'}">
+                            <div class="lyric-wrap">
+                                <ul class="lyric-wrap-inner" ref="ulRef" :style="{'transform': 'translateY(' + lyricTop + ')'}">
                                     <li
                                         v-for="(item, index) in showLyric.lyricObj"
                                         :key="item.uid"
                                         :class="{acting: Idx === index}"
                                         :data-index="index"
+                                        :data-time="item.time"
                                         :ref="setRef"
                                     >
                                         {{item.lyric}}
@@ -103,7 +104,7 @@ const props = defineProps({
 
 const isMove = ref(false);      // 圆圈是否移动
 const lyricFlag = ref(true);    // 是否同首歌
-const lyricTop = ref('150px');  // 歌词距离
+const lyricTop = ref(0);  // 歌词距离
 const Idx = ref(0);             // 歌词索引
 
 // 歌词dom
@@ -129,7 +130,6 @@ const showLyric = reactive({
 
 const emit = defineEmits(['updateShowParam', 'updateUsProgress', 'updatePlayParam']);
 
-
 const hideInAudio = () => {     // 隐藏内页
     emit('updateShowParam', false);
 }
@@ -137,10 +137,8 @@ const updateMusicProgress = (isMove, time) => {
     emit('updateUsProgress', isMove, time);
 }
 const updatePlayParam = (num) => {
-    if (num) {
+    if (!isNaN(num) && typeof num === 'number') {
         lyricFlag.value = true;
-        lyricTop.value = '150px';
-        Idx.value = 0;
         emit('updatePlayParam', num);
     }
     else {
@@ -263,22 +261,30 @@ const setRef = (el) => {
     liRef.value.push(el);
 };
 
+// todo: 歌词时间拖动处理
 // 歌词和播放时间处理
 const handleLyricTransform  = (currentTime) => {
 
-    const item = showLyric.lyricObj[Idx.value];
+    let item = showLyric.lyricObj;
 
     // 正在播放的索引
-    const index = parseInt(liRef.value[Idx.value].dataset.index);
-    if (lyricFlag.value && props.obj.$audio.currentTime > item.time) {
-        if (Idx.value === index) {
-            Idx.value += 1;
-            lyricTop.value = `${-(liRef.value[Idx.value].offsetHeight * index) + 150}px`; // 150 为歌词容器高度的一半，让歌词居中
-            if (Idx.value >= showLyric.lyricObj.length) { // 歌词没了
-                lyricFlag.value = false;
-                return;
-            }
+    let index = parseInt(liRef.value[Idx.value].dataset.index);
+
+     // 歌词结束
+    if (Idx.value >= item.length - 1) {
+        lyricFlag.value = false;
+        return;
+    }
+    
+    // 播放时间 > 下一句歌词时间
+    if (lyricFlag.value && props.obj.$audio.currentTime > item[[Idx.value + 1]].time) {
+        Idx.value++;
+
+        // 前几句/最后几句不滚动
+        if ((index <= 4) || (index >= item.length - 5)) {
+            return;
         }
+        lyricTop.value = `${-(liRef.value[Idx.value].offsetHeight * (index - 4))}px`; 
     }
 }
 
@@ -287,10 +293,10 @@ const formatMusicLyrics = (lyric) => {
 	if (lyric === '') {
 		return { lyric: [{ time: 0, lyric: '这个地方没有歌词！', uid: 520520 }] }
 	}
-	var lyricObjArr = [];
-	var lineLyric = lyric.split(/\n/);
+	let lyricObjArr = [];
+	let lineLyric = lyric.split(/\n/);
 
-	var regTime = /\d{2}:\d{2}.\d{2,3}/;
+	let regTime = /\d{2}:\d{2}.\d{2,3}/;
 
 	 for (let i = 0; i < lineLyric?.length; i++) {
 	    if (lineLyric[i] === '') {
@@ -301,7 +307,7 @@ const formatMusicLyrics = (lyric) => {
 	    if (lineLyric[i].split(']')[1] !== '') {
 	        lyricObjArr.push({
                 time: time,
-                lyric: lineLyric[i].split(']')[1],
+                lyric: lineLyric[i].split(']')[1].trim() || '🎵...μs...🎵',
                 uid: parseInt(Math.random().toString().slice(-6))
             })
 	    }
@@ -337,6 +343,8 @@ watch(
     () => props.obj.list[props.obj.count],
     (newVal, oldVal) => {
         if (newVal) {
+            Idx.value = 0; // 重置歌词索引
+            lyricTop.value = 0; // 重置歌词滚动
             showLyric.lyricObj = formatMusicLyrics(newVal.lyric);
         }
     },
