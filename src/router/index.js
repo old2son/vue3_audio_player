@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory } from 'vue-router';
+import { createRouter, createWebHashHistory, createWebHistory } from 'vue-router';
 const home = ()=> import('@/views/Home.vue');
 const search = ()=> import('@/views/Search.vue');
 const radio = ()=> import('@/views/Radio.vue');
@@ -27,7 +27,8 @@ const routes = [
 
 const router = createRouter({
     history: createWebHashHistory(),
-    routes: routes
+    // history: createWebHistory(),
+    routes
 });
 
 export default router;

@@ -1,4 +1,5 @@
 <template>
+    <!-- 直接插入到body -->
     <teleport to="body">
         <div class="in-audio-warp" :class="{'show' : showOk}" v-if="obj.list[obj.count]">
 
@@ -17,7 +18,9 @@
                 
                 <dl class="us-msg">
                     <dt>{{obj.list[obj.count].title}}</dt>
-                    <dd>{{obj.list[obj.count].singer}}</dd>
+                    <dd class="name">{{obj.list[obj.count].singer}}</dd>
+                    <dd class="icon-speaker js-volume"></dd>
+                    <dd class="icon-heart js-like">❤</dd>
                 </dl>
 
                 <div class="us-audio js-usaudio">
@@ -43,9 +46,11 @@
                             </div>
                             
                             <div class="btns">
+                                <a class="random js-random" @click.stop="">random</a>
                                 <a class="prev js-prev" @click.stop="updatePlayParam(-1)"></a>
                                 <a class="play js-play" :class="{'active' : isPlay}" @click.stop="updatePlayParam"></a>
                                 <a class="next js-next" @click.stop="updatePlayParam(1)"></a>
+                                <a class="same js-same" @click.stop="">same</a>
                             </div>
 
                             <div class="lyric-wrap">

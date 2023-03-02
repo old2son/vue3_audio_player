@@ -9,7 +9,12 @@
                         <dd>{{item.text}}</dd>
                     </dl>
                 </template>
-                
+                <template v-for="(item, index) in obj.recentList" :key="index">
+                    <dl>
+                        <dt><img :src="item.pic"></dt>
+                        <dd>{{item.text}}</dd>
+                    </dl>
+                </template>
             </div>
         </div>
     </div>
