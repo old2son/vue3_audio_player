@@ -9,21 +9,37 @@ export default [
                 data: {
                     timeRec: [
                         {
-                            pic: "/src/assets/temp_003.jpg",
-                            text: "宇宙榜"
+                            pic: "/src/assets/poster_01.jpg",
+                            text: "normal rank"
                         },
                         {
-                            pic: "/src/assets/temp_003.jpg",
-                            text: "银河系榜"
+                            pic: "/src/assets/poster_01.jpg",
+                            text: "🔥⭐rank"
+                        },
+                        {
+                            pic: "/src/assets/poster_01.jpg",
+                            text: "🌏rank"
+                        },
+                        {
+                            pic: "/src/assets/poster_01.jpg",
+                            text: "🌌rank"
                         }
                     ],
                     recentList: [
                         {
-                            pic: "/src/assets/temp_004.jpg",
+                            pic: "/src/assets/poster_02.jpg",
                             text: "流行乐"
                         },
                         {
-                            pic: "/src/assets/temp_004.jpg",
+                            pic: "/src/assets/poster_02.jpg",
+                            text: "动感音乐"
+                        },
+                        {
+                            pic: "/src/assets/poster_02.jpg",
+                            text: "最Hit音乐"
+                        },
+                        {
+                            pic: "/src/assets/poster_02.jpg",
                             text: "vtb专辑"
                         }
                     ]

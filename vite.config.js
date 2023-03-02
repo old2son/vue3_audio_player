@@ -21,6 +21,16 @@ export default defineConfig({
 		postcss: {
 			plugins: [],
 		},
+		preprocessorOptions: {
+			scss: {
+				additionalData: `@import '@/styles/_variable.scss';`, // 全局变量获取
+			  	// additionalData: `$text-positive: #1ed760;`,
+			},
+			scss: {
+				additionalData: `@use '@/styles/_variable.scss' as *;`, // @use 'sass:math'; 必须最前
+			},
+		},
+		devSourcemap: true
 	},
 	build: {
 		// 压缩

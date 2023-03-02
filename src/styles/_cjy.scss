@@ -1,6 +1,12 @@
-html,
 body {
-    height: 100%; // 测试用
+    max-width: 750px;
+    margin: 0 auto;
+    background: #121212;
+}
+
+.pb-container {
+    height: 100%;
+    background: linear-gradient(180deg, #504c4b 0%, #2b292a 30%, #121212 50%) ;
 }
 
 .pb-tl {
@@ -14,6 +20,11 @@ body {
     left: 0;
     bottom: 0;
     right: 0;
+    z-index: 10;
+    max-width: 750px;
+    margin: 0 auto;
+    border-top: 1px solid #282828;
+    background-color: #181818;
 }
 
 .pb-navbottom {
@@ -225,11 +236,12 @@ body {
     right: 0;
     top: 100%;
     bottom: 0;
-    // padding: pxtorem(20) pxtorem(40);
+    z-index: 20;
     overflow: auto;
     opacity: 0;
     transition: all 0.35s;
     background: linear-gradient(125deg, #504c4b, #2b292a, #121212) ;
+    background-size: 400%;
 
     &.show {
         top: 0;
@@ -283,6 +295,7 @@ body {
     }
 
     .us-msg {
+        position: relative;
         padding: pxtorem(30);
 
         dt {
@@ -291,9 +304,40 @@ body {
             font-size: pxtorem(32);
         }
 
-        dd {
+        .name {
             color: rgba(#cfcfcf, 0.5);
             font-size: pxtorem(28);
+        }
+        
+        .icon-speaker {
+            display: block;
+            position: absolute;
+            right: pxtorem(30);
+            top: 50%;
+            width: pxtorem(40);
+            height: pxtorem(40);
+            transform: translateY(-50%);
+    
+            background: url(@/assets/icon_speaker.png) center no-repeat;
+            background-size: pxtorem(30);
+        }
+
+        .icon-heart {
+            display: block;
+            position: absolute;
+            right: pxtorem(150);
+            top: 50%;
+            width: pxtorem(40);
+            height: pxtorem(40);
+            line-height: pxtorem(45);
+            text-align: center;
+            transform: translateY(-50%);
+            color: #fff;
+            font-size: pxtorem(35);
+
+            &.on {
+                color: $text-positive;
+            }
         }
     }
 
@@ -302,14 +346,13 @@ body {
 
         .progress-wrap {
             position: relative;
+            padding: 0 pxtorem(30);
 
             .bar {
                 position: relative;
-                width: 92%;
+                width: 100%;
                 height: pxtorem(50);
-                margin: 0 4%;
                 border-radius: pxtorem(60);
-                // background: grey;
 
                 &::after {
                     position: absolute;
@@ -327,14 +370,14 @@ body {
             .cur,
             .rdy {
                 position: absolute;
-                // left: 0;
+                left: 0;
                 top: 50%;
                 z-index: 1;
                 width: 0px;
                 height: pxtorem(8);
                 border-radius: pxtorem(60);
                 transform: translateY(-50%);
-                // transition: all 0.2s;
+                transition: all 0.2s;
             }
 
             .cur {
@@ -440,7 +483,7 @@ body {
     .column-list {
         display: flex;
         justify-content: space-between;
-        margin-top: pxtorem(15);
+        flex-wrap: wrap;
 
         img {
             width: 100%;
@@ -449,19 +492,19 @@ body {
         dl {
             display: flex;
             align-items: center;
-            flex: 1;
+            width: 50%;
             height: pxtorem(100);
+            margin: pxtorem(30) 0 ;
             overflow: hidden;
             border-radius: pxtorem(10);
             box-shadow: 1px 1px 1px 1px rgba(#000, 0.1);
-            background-color: #2a2a2a;
 
             &:nth-of-type(2n-1) {
-                margin-right: pxtorem(10);
+                padding-right: pxtorem(10);
             }
 
             &:nth-of-type(2n) {
-                margin-left: pxtorem(10);
+                padding-left: pxtorem(10);
             }
         }
 
@@ -471,9 +514,14 @@ body {
         }
         
         dd {
+            flex: 1;
+            height: pxtorem(100);
+            line-height: pxtorem(100);
             padding-left: pxtorem(15);
+            overflow: hidden;
             color: #fff;
             font-size: pxtorem(24);
+            background-color: #2a2a2a;
         }
     }
 }
