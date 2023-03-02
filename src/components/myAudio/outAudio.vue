@@ -47,7 +47,7 @@ import axios from 'axios';
 import inAudio from '@/components/myAudio/inAudio.vue';
 
 // 子组件ref
-const childRef = ref('childRef');
+const childRef = ref(null);
 
 nextTick(() => {
     // 获取子组件type

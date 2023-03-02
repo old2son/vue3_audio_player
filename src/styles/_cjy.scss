@@ -228,13 +228,8 @@ body {
     // padding: pxtorem(20) pxtorem(40);
     overflow: auto;
     opacity: 0;
-    transition: all 0.2s;
+    transition: all 0.35s;
     background: linear-gradient(125deg, #504c4b, #2b292a, #121212) ;
-
-    // 测试
-    // top: 0;
-    // opacity: 1;
-
 
     &.show {
         top: 0;
@@ -279,6 +274,12 @@ body {
     .us-poster {
         padding: pxtorem(50) pxtorem(100);
         text-align: center;
+
+        i {
+            display: block;
+            overflow: hidden;
+            border-radius: 5px;
+        }
     }
 
     .us-msg {
@@ -381,8 +382,8 @@ body {
 
         a {
             display: block;
-            width: pxtorem(80);
-            height: pxtorem(80);
+            width: pxtorem(50);
+            height: pxtorem(50);
         }
 
         .play {
@@ -407,22 +408,24 @@ body {
     }
 }
 
-.lrcs-wrap {
+.lyric-wrap {
     padding: 8px;
     height: 300px;
-    margin: 30px auto;
+    margin: 30px 20px;
+    border-radius: 10px;
     overflow: hidden;
-    background-color: violet;
+    background-color: rgb(162, 78, 106);
 
-    .lrcs-wrap-inner {
-        overflow: hidden;
+    .lyric-wrap-inner {
+        overflow: hidden; 
         text-align: center;
-        transition: all 0.3s;
-        color: #fff;
+        transition: all 0.1s;
+        color: rgb(55, 25, 35);
         font-size: 16px;
+        font-weight: bold;
 
         .acting {
-            color: aquamarine;
+            color: #fff;
             font-size: 18px;
         }
     }
