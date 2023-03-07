@@ -230,7 +230,7 @@ body {
     
 }
 
-.in-audio-warp {
+.in-audio-wrap {
     position: fixed;
     left: 0;
     right: 0;
@@ -317,9 +317,42 @@ body {
             width: pxtorem(40);
             height: pxtorem(40);
             transform: translateY(-50%);
-    
             background: url(@/assets/icon_speaker.png) center no-repeat;
             background-size: pxtorem(30);
+        }
+
+        .volume-bar {
+            position: absolute;
+            left: 50%;
+            top: pxtorem(-100);
+            width: pxtorem(10);
+            height: pxtorem(80);
+            border-radius: 40px;
+            transform: translateX(-50%);
+            background-size: pxtorem(30);
+            background-color: gray;
+        }
+
+        .volume-cur {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: pxtorem(10);
+            height: 100%;
+            border-radius: 40px;
+            background: #fff;
+
+            &::after {
+                position: absolute;
+                left: 50%;
+                top: pxtorem(-10);
+                content: '⭐';
+                width: pxtorem(30);
+                height: pxtorem(30);
+                line-height: pxtorem(30);
+                transform: translateX(-50%);
+                font-size: pxtorem(20);
+            }
         }
 
         .icon-heart {

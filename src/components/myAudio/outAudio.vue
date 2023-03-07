@@ -17,7 +17,7 @@
 
                     <div class="progress-wrap">
                         <div class="bar js-bar">
-                            <div class="rdy js-progress-rdy"></div>
+                            <!-- <div class="rdy js-progress-rdy"></div> -->
                             <div class="cur js-progress-cur" :style="{'width': obj.musicProgress  + '%'}"></div>
                         </div>
                     </div>
@@ -32,7 +32,7 @@
 
     <in-audio 
         ref='childRef'
-        :showOk="isShow" 
+        :isShow="isShow" 
         :isPlay="isPlay" 
         :obj="obj"
         @updateShowParam='updateShowParam'

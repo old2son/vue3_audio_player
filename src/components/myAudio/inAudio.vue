@@ -1,8 +1,12 @@
 <template>
     <!-- 直接插入到body -->
     <teleport to="body">
-        <div class="in-audio-warp" :class="{'show' : showOk}" v-if="obj.list[obj.count]">
-
+        <div 
+            class="in-audio-wrap" 
+            :class="{'show' : isShow}"
+            :style="{'overflow': isHidden ? 'hidden' : 'auto'}" 
+            v-if="obj.list[obj.count]"
+        >
             <div class="us-head">
                 <i class="icon-arrow-down" @click="hideInAudio"></i>
                 <dl class="us-tl">
@@ -19,7 +23,18 @@
                 <dl class="us-msg">
                     <dt>{{obj.list[obj.count].title}}</dt>
                     <dd class="name">{{obj.list[obj.count].singer}}</dd>
-                    <dd class="icon-speaker js-volume"></dd>
+                    <dd class="icon-speaker js-volume">
+                        <span class="volume-bar js-volume-bar">
+                            <span 
+                                class="volume-cur js-volume-cur" 
+                                ref="volumeRef"
+                                :style="{'height': volume + '%'}" 
+                                @touchstart.stop="volumeStart"
+                                @touchmove.stop="volumeMove"
+                                @touchend.stop="volumeEnd"
+                            ></span>
+                        </span>
+                    </dd>
                     <dd class="icon-heart js-like">❤</dd>
                 </dl>
 
@@ -29,9 +44,10 @@
                             <div class="audio-info">
                                 <div class="progress-wrap">
                                     <div class="bar js-bar"
-                                        @touchstart="touchstart"
-                                        @touchmove="touchmove"
-                                        @touchend="touchend">
+                                        @touchstart.stop="musicTouchstart"
+                                        @touchmove.stop="musicTouchmove"
+                                        @touchend.stop="musicTouchend"
+                                    >
                                         <div class="rdy"></div>
                                         <div class="cur" :style="{'width': obj.musicProgress  + '%'}">
                                             <span class="js-circle circle" :class="{'active' : isMove}"><i></i></span>
@@ -96,7 +112,7 @@ defineExpose({
 });
 
 const props = defineProps({
-    showOk: {
+    isShow: {
         type: Boolean,
         default: false
     },
@@ -109,7 +125,7 @@ const props = defineProps({
 
 const isMove = ref(false);      // 圆圈是否移动
 const lyricFlag = ref(true);    // 是否同首歌
-const lyricTop = ref(0);  // 歌词距离
+const lyricTop = ref(0);        // 歌词距离
 const Idx = ref(0);             // 歌词索引
 
 // 歌词dom
@@ -166,7 +182,7 @@ const getUsCurTime = () => {
     return $cur.offsetWidth / $bar.offsetWidth * props.obj.$audio.duration;
 }
 
-const touchstart = (event) => {
+const musicTouchstart = (event) => {
     if (!event.cancelable) {
         return;
     }
@@ -176,8 +192,7 @@ const touchstart = (event) => {
     pos.startX = event.changedTouches[0].clientX;
     pos.startY = event.changedTouches[0].clientY;
 }
-
-const touchmove = (event) => {
+const musicTouchmove = (event) => {
     event.preventDefault();
     let moveEndX = event.changedTouches[0].clientX;
     let moveEndY = event.changedTouches[0].clientY;
@@ -217,8 +232,7 @@ const touchmove = (event) => {
         
     }
 }
-
-const touchend = (event) => {
+const musicTouchend = (event) => {
     event.preventDefault();
     pos.endTime = new Date().getTime();
     pos.isRecord = false;
@@ -292,7 +306,6 @@ const handleLyricTransform  = (currentTime) => {
         lyricTop.value = `${-(liRef.value[Idx.value].offsetHeight * (index - 4))}px`; 
     }
 }
-
 // 歌词格式化
 const formatMusicLyrics = (lyric) => {
 	if (lyric === '') {
@@ -320,7 +333,6 @@ const formatMusicLyrics = (lyric) => {
 
     return lyricObjArr
 }
-
 // 歌词时间格式化
 const formatLyricTime = (time) => {
     const regMin = /.*:/
@@ -334,6 +346,33 @@ const formatLyricTime = (time) => {
         sec += min * 60
     }
     return Number(sec + '.' + ms)
+}
+
+const isHidden = ref(false);
+const getTouchPos = (event) => {
+    const touch = event.touches[0];
+    return {
+        x: touch.clientX,
+        y: touch.clientY
+    }
+}
+const volume = ref(100);        // 音量
+const volumeRef = ref(null);
+// 音量处理
+const volumeStart = (event) => {
+    const { top, left, height } = volumeRef.value.getBoundingClientRect();
+    const { x, y } = getTouchPos(event);
+    let startX = x - left;
+    let startY = x - top;
+    console.log(startX, startY)
+    isHidden.value = true;
+}
+const volumeMove = (event) => {
+
+}
+const volumeEnd = (event) => {
+    // document.body.style.overflow = 'initial';
+    isHidden.value = false;
 }
 
 onMounted(() => {
