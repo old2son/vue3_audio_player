@@ -205,7 +205,6 @@ const setAudio = () => {
                 obj.count = obj.count >= obj.list.length - 1 ? 0 : obj.count + 1;
             }
 
-            obj.$audio = null;
             obj.$barCur.style.width = 0;
             setAudio();
         });

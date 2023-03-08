@@ -137,7 +137,7 @@ const props = defineProps({
 });
 
 const isMove = ref(false);      // 圆圈是否移动
-const lyricFlag = ref(true);    // 是否同首歌
+const lyricFlag = ref(true);    // 是否歌词滚动
 const lyricTop = ref(0);        // 歌词距离
 const Idx = ref(0);             // 歌词索引
 
@@ -173,15 +173,6 @@ const updatePlayParam = (num) => {
     if (isNaN(num) || typeof num !== 'number') {
         return;
     }
-
-    // switch (num) {
-    //     case 2:
-    //         isRandom.value = !isRandom.value;
-    //         break;
-    //     case 3:
-    //         isSame.value = !isSame.value;
-    //         break;
-    // }
 
     lyricFlag.value = true;
     emit('updatePlayParam', num);
@@ -305,8 +296,8 @@ const handleLyricTransform  = () => {
 
     // 正在播放的索引
     let index = parseInt(liRef.value[Idx.value].dataset.index);
-    
-     // 歌词结束
+
+     // 歌词滚动结束
     if (Idx.value >= item.length - 1) {
         lyricFlag.value = false;
         return;
@@ -386,7 +377,10 @@ const getVolumePos = (event) => {
     else if (startY > height) {
         startY = height;
     }
-    volume.value = ((height - startY) / height) * 100;
+
+    let num = ((height - startY) / height);
+    props.obj.$audio.volume = num;
+    volume.value = num * 100;
 }
 // 音量拖动
 const volumeStart = (event) => {
@@ -414,6 +408,7 @@ watch(
         if (newVal) {
             Idx.value = 0; // 重置歌词索引
             lyricTop.value = 0; // 重置歌词滚动
+            lyricFlag.value = true; // 重置歌词滚动标识
             showLyric.lyricObj = formatMusicLyrics(newVal.lyric);
         }
     },
