@@ -9,11 +9,9 @@ const isProduction = process.env.NODE_ENV === 'production';
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
 	const env = loadEnv(mode, process.cwd() + '/env');
-	console.log('env::', env);
-	console.log(process.env);
 
 	return {
-		envDir: './env', // 环境变量目录
+		envDir: './env', // env 目录
 		base: isProduction ? './' : '',
 		mode: 'development',
 		define: '',

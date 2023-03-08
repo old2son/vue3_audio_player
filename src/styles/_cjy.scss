@@ -226,8 +226,6 @@ body {
     .audio-time em {
         color: #a1a1a1;
     }
-
-    
 }
 
 .in-audio-wrap {
@@ -240,6 +238,7 @@ body {
     overflow: auto;
     opacity: 0;
     transition: all 0.35s;
+    touch-action: none;
     background: linear-gradient(125deg, #504c4b, #2b292a, #121212) ;
     background-size: 400%;
 
@@ -485,13 +484,29 @@ body {
         }
 
         .random {
-            background: url(@/assets/icon_prevsong.png) center no-repeat;
+            position: relative;
+            background: url(@/assets/icon_random.png) center no-repeat;
             background-size: 100%;
         }
 
         .same {
-            background: url(@/assets/icon_prevsong.png) center no-repeat;
+            background: url(@/assets/icon_repeat.png) center no-repeat;
             background-size: 100%;
+        }
+
+        .music-state-active {
+            position: relative;
+            &::after {
+                position: absolute;
+                left: 50%;
+                bottom: pxtorem(-15);
+                content: '';
+                width: pxtorem(10);
+                height: pxtorem(10);
+                border-radius: 50%;
+                transform: translateX(-50%);
+                background: $text-positive;
+            }
         }
     }
 }

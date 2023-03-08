@@ -23,7 +23,10 @@
                 <dl class="us-msg">
                     <dt>{{obj.list[obj.count].title}}</dt>
                     <dd class="name">{{obj.list[obj.count].singer}}</dd>
-                    <dd class="icon-speaker js-volume" @click.prevent="isVolume ? isVolume = false : isVolume =true">
+                    <dd 
+                        class="icon-speaker js-volume" 
+                        @click.prevent="isVolume ? isVolume = false : isVolume = true"
+                    >
                         <span 
                             class="volume-bar js-volume-bar"
                             ref="volumeRef"
@@ -32,7 +35,10 @@
                             @touchmove.prevent="volumeMove"
                             @touchend.prevent="volumeEnd"
                         >
-                            <span class="volume-cur js-volume-cur" :style="{'height': volume + '%'}"></span>
+                            <span 
+                                class="volume-cur js-volume-cur" 
+                                :style="{'height': volume + '%'}"
+                            ></span>
                         </span>
                     </dd>
                     <dd class="icon-heart js-like">❤</dd>
@@ -62,11 +68,11 @@
                             </div>
                             
                             <div class="btns">
-                                <a class="random js-random" @click.stop=""></a>
-                                <a class="prev js-prev" @click.stop="updatePlayParam(-1)"></a>
-                                <a class="play js-play" :class="{'active' : isPlay}" @click.stop="updatePlayParam"></a>
-                                <a class="next js-next" @click.stop="updatePlayParam(1)"></a>
-                                <a class="same js-same" @click.stop=""></a>
+                                <a class="random" :class="{'music-state-active' : isRandom}" @click.prevent="updatePlayParam(2)"></a>
+                                <a class="prev" @click.prevent="updatePlayParam(-1)"></a>
+                                <a class="play" :class="{'active' : isPlay}" @click.prevent="updatePlayParam(0)"></a>
+                                <a class="next" @click.prevent="updatePlayParam(1)"></a>
+                                <a class="same" :class="{'music-state-active' : isSame}" @click.prevent="updatePlayParam(3)"></a>
                             </div>
 
                             <div class="lyric-wrap">
@@ -86,7 +92,6 @@
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </teleport>
@@ -120,6 +125,14 @@ const props = defineProps({
         type: Boolean,
         default: false
     },
+    isRandom: {
+        type: Boolean,
+        default: false
+    },
+    isSame: {
+        type: Boolean,
+        default: false
+    },
     obj: {} // 歌曲信息
 });
 
@@ -128,7 +141,7 @@ const lyricFlag = ref(true);    // 是否同首歌
 const lyricTop = ref(0);        // 歌词距离
 const Idx = ref(0);             // 歌词索引
 
-// 歌词dom
+// 歌词 dom
 const ulRef = ref(null);
 const liRef = ref([]);
 
@@ -157,13 +170,21 @@ const updateMusicProgress = (isMove, time) => {
     emit('updateUsProgress', isMove, time);
 }
 const updatePlayParam = (num) => {
-    if (!isNaN(num) && typeof num === 'number') {
-        lyricFlag.value = true;
-        emit('updatePlayParam', num);
+    if (isNaN(num) || typeof num !== 'number') {
+        return;
     }
-    else {
-        emit('updatePlayParam');
-    }
+
+    // switch (num) {
+    //     case 2:
+    //         isRandom.value = !isRandom.value;
+    //         break;
+    //     case 3:
+    //         isSame.value = !isSame.value;
+    //         break;
+    // }
+
+    lyricFlag.value = true;
+    emit('updatePlayParam', num);
 }
 
 // 计算跳转播放横条
@@ -265,7 +286,7 @@ const musicTouchend = (event) => {
 }
 
 onBeforeUpdate(() => {
-    // liRef.value = []
+    liRef.value = []; // 清空歌词dom
 });
 
 onUpdated(() => {
@@ -273,18 +294,18 @@ onUpdated(() => {
 })
 
 const setRef = (el) => {
-    liRef.value.push(el);
+    liRef.value.push(el); // 获取歌词dom
 };
 
 // todo: 歌词时间拖动处理
 // 歌词和播放时间处理
-const handleLyricTransform  = (currentTime) => {
+const handleLyricTransform  = () => {
 
     let item = showLyric.lyricObj;
 
     // 正在播放的索引
     let index = parseInt(liRef.value[Idx.value].dataset.index);
-
+    
      // 歌词结束
     if (Idx.value >= item.length - 1) {
         lyricFlag.value = false;

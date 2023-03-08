@@ -33,7 +33,9 @@
     <in-audio 
         ref='childRef'
         :isShow="isShow" 
-        :isPlay="isPlay" 
+        :isPlay="isPlay"
+        :isSame="isSame"
+        :isRandom="isRandom"
         :obj="obj"
         @updateShowParam='updateShowParam'
         @updatePlayParam='updatePlayParam'
@@ -56,10 +58,12 @@ nextTick(() => {
     // childRef.value.changeType();   // 歌词变动 测试用
 });
 
-const isFirst = ref(true); // 首次加载音乐
-const isShow = ref(false); // 显示播放
-const isPlay = ref(false); // 播放
-const isMove = ref(false); // 拖拽
+const isFirst = ref(true);      // 首次加载音乐
+const isShow = ref(false);      // 显示播放
+const isPlay = ref(false);      // 播放
+const isSame = ref(false);      // 循环
+const isRandom = ref(false);    // 随机
+const isMove = ref(false);      // 拖拽
 
 const obj = reactive({
     $audio: '',
@@ -92,16 +96,27 @@ const updateShowParam = (param) => {
 
 // 播放按钮处理
 const updatePlayParam = (param) => {
-    if (param === 1 || param === -1) {  // 切歌
-        obj.count += param;
-        obj.count = obj.count > obj.list.length - 1 ? 0 : (obj.count < 0 ? obj.list.length - 1 : obj.count);
-        obj.$barCur.style.width = 0;
-        isFirst.value = true;
-        isPlay.value = false;
-        setAudio();
+    switch(param) {
+        case 0: // 暂停/播放
+            audioPlay();
+            break;
+        case -1:
+        case 1: // 切歌
+            obj.count += param;
+            obj.count = obj.count > obj.list.length - 1 ? 0 : (obj.count < 0 ? obj.list.length - 1 : obj.count);
+            obj.$barCur.style.width = 0;
+            isFirst.value = true;
+            isPlay.value = false;
+            setAudio();
+            audioPlay();
+            break;
+        case 2:
+            isRandom.value = !isRandom.value;
+            break;
+        case 3:
+            isSame.value = !isSame.value;
+            break;
     }
-
-    audioPlay();
 }
 
 // 音乐播放条移动距离
@@ -114,7 +129,6 @@ const updateUsProgress = (inIsMove, time) => {
         });
 
         obj.musicProgress = (time / obj.$audio.duration) * 100;
-
     }
     else {
         obj.$audio.currentTime = time;
@@ -180,20 +194,17 @@ const setAudio = () => {
         // 播放位置改变
         $audio.addEventListener('timeupdate', function () {
             moveCurPos();
-            childRef.value.changeType(); // 歌词变动
+            childRef.value.changeType(); // 测试用
         });
 
         $audio.addEventListener('ended', function () {
-            // 重播
-            // if (!isMouseMove) {
-            //     obj.count = obj.count >= obj.list.length - 1 ? 0 : obj.count + 1;
-            //     $audio = null;
-            //     obj.$barCur.style.width = 0;
+            if (isRandom.value) {
+                
+            }
+            else if (!isSame.value) {
+                obj.count = obj.count >= obj.list.length - 1 ? 0 : obj.count + 1;
+            }
 
-            //     setAudio();
-            // }
-            
-            obj.count = obj.count >= obj.list.length - 1 ? 0 : obj.count + 1;
             obj.$audio = null;
             obj.$barCur.style.width = 0;
             setAudio();
