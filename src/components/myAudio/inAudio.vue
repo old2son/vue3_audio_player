@@ -23,16 +23,16 @@
                 <dl class="us-msg">
                     <dt>{{obj.list[obj.count].title}}</dt>
                     <dd class="name">{{obj.list[obj.count].singer}}</dd>
-                    <dd class="icon-speaker js-volume">
-                        <span class="volume-bar js-volume-bar">
-                            <span 
-                                class="volume-cur js-volume-cur" 
-                                ref="volumeRef"
-                                :style="{'height': volume + '%'}" 
-                                @touchstart.stop="volumeStart"
-                                @touchmove.stop="volumeMove"
-                                @touchend.stop="volumeEnd"
-                            ></span>
+                    <dd class="icon-speaker js-volume" @click.prevent="isVolume ? isVolume = false : isVolume =true">
+                        <span 
+                            class="volume-bar js-volume-bar"
+                            ref="volumeRef"
+                            v-show="isVolume"
+                            @touchstart.prevent="volumeStart"
+                            @touchmove.prevent="volumeMove"
+                            @touchend.prevent="volumeEnd"
+                        >
+                            <span class="volume-cur js-volume-cur" :style="{'height': volume + '%'}"></span>
                         </span>
                     </dd>
                     <dd class="icon-heart js-like">❤</dd>
@@ -44,9 +44,9 @@
                             <div class="audio-info">
                                 <div class="progress-wrap">
                                     <div class="bar js-bar"
-                                        @touchstart.stop="musicTouchstart"
-                                        @touchmove.stop="musicTouchmove"
-                                        @touchend.stop="musicTouchend"
+                                        @touchstart.prevent="musicTouchstart"
+                                        @touchmove.prevent="musicTouchmove"
+                                        @touchend.prevent="musicTouchend"
                                     >
                                         <div class="rdy"></div>
                                         <div class="cur" :style="{'width': obj.musicProgress  + '%'}">
@@ -62,11 +62,11 @@
                             </div>
                             
                             <div class="btns">
-                                <a class="random js-random" @click.stop="">random</a>
+                                <a class="random js-random" @click.stop=""></a>
                                 <a class="prev js-prev" @click.stop="updatePlayParam(-1)"></a>
                                 <a class="play js-play" :class="{'active' : isPlay}" @click.stop="updatePlayParam"></a>
                                 <a class="next js-next" @click.stop="updatePlayParam(1)"></a>
-                                <a class="same js-same" @click.stop="">same</a>
+                                <a class="same js-same" @click.stop=""></a>
                             </div>
 
                             <div class="lyric-wrap">
@@ -141,7 +141,6 @@ const pos = reactive({
     endTime: '',
     distanceX: '',
     distanceY: '',
-    timeOutEvent: '',
     isRecord: false
 }); 
 
@@ -187,13 +186,11 @@ const musicTouchstart = (event) => {
         return;
     }
 
-    event.preventDefault(); // 阻止默认事件（长按的时候出现复制）
     pos.startTime = new Date().getTime();
     pos.startX = event.changedTouches[0].clientX;
     pos.startY = event.changedTouches[0].clientY;
 }
 const musicTouchmove = (event) => {
-    event.preventDefault();
     let moveEndX = event.changedTouches[0].clientX;
     let moveEndY = event.changedTouches[0].clientY;
     let x = moveEndX - pos.startX;
@@ -233,7 +230,6 @@ const musicTouchmove = (event) => {
     }
 }
 const musicTouchend = (event) => {
-    event.preventDefault();
     pos.endTime = new Date().getTime();
     pos.isRecord = false;
 
@@ -269,7 +265,7 @@ const musicTouchend = (event) => {
 }
 
 onBeforeUpdate(() => {
-    liRef.value = []
+    // liRef.value = []
 });
 
 onUpdated(() => {
@@ -348,7 +344,10 @@ const formatLyricTime = (time) => {
     return Number(sec + '.' + ms)
 }
 
+const volume = ref(100);        // 音量
+const volumeRef = ref(null);
 const isHidden = ref(false);
+const isVolume = ref(false);
 const getTouchPos = (event) => {
     const touch = event.touches[0];
     return {
@@ -356,24 +355,27 @@ const getTouchPos = (event) => {
         y: touch.clientY
     }
 }
-
-// todo: 音量拖动处理
-const volume = ref(100);        // 音量
-const volumeRef = ref(null);
-// 音量处理
+const getVolumePos = (event) => {
+    const { top, height } = volumeRef.value.getBoundingClientRect();
+    const { y } = getTouchPos(event);
+    let startY = y - top;
+    if (startY <= 0) {
+        startY = 0;
+    } 
+    else if (startY > height) {
+        startY = height;
+    }
+    volume.value = ((height - startY) / height) * 100;
+}
+// 音量拖动
 const volumeStart = (event) => {
-    const { top, left, height } = volumeRef.value.getBoundingClientRect();
-    const { x, y } = getTouchPos(event);
-    let startX = x - left;
-    let startY = x - top;
-    console.log(startX, startY)
+    getVolumePos(event);
     isHidden.value = true;
 }
 const volumeMove = (event) => {
-
+    getVolumePos(event);
 }
 const volumeEnd = (event) => {
-    // document.body.style.overflow = 'initial';
     isHidden.value = false;
 }
 

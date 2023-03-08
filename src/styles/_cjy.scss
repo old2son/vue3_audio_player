@@ -329,6 +329,7 @@ body {
             height: pxtorem(80);
             border-radius: 40px;
             transform: translateX(-50%);
+            box-shadow: 0 0 0px pxtorem(5) rgba(#666, 0.3);
             background-size: pxtorem(30);
             background-color: gray;
         }
@@ -336,10 +337,11 @@ body {
         .volume-cur {
             position: absolute;
             left: 0;
-            top: 0;
+            bottom: 0;
             width: pxtorem(10);
             height: 100%;
             border-radius: 40px;
+            transition: 0.2s;
             background: #fff;
 
             &::after {
@@ -478,6 +480,16 @@ body {
         }
 
         .prev {
+            background: url(@/assets/icon_prevsong.png) center no-repeat;
+            background-size: 100%;
+        }
+
+        .random {
+            background: url(@/assets/icon_prevsong.png) center no-repeat;
+            background-size: 100%;
+        }
+
+        .same {
             background: url(@/assets/icon_prevsong.png) center no-repeat;
             background-size: 100%;
         }

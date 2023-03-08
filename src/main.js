@@ -2,6 +2,7 @@ import { createApp } from 'vue';
 import App from './App.vue';
 import router from '@/router/index.js';
 // import '@/styles/style.scss';
+console.log('import.meta.env::', import.meta.env) // 环境变量
 
 const app = createApp(App);
 app.use(router);
