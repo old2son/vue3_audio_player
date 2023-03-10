@@ -288,9 +288,11 @@ const setRef = (el) => {
     liRef.value.push(el); // 获取歌词dom
 };
 
-// todo: 歌词时间拖动处理
+// todo: 歌词滚动处理
 // 歌词和播放时间处理
 const handleLyricTransform  = () => {
+
+    console.log('handleLyricTransform');
 
     let item = showLyric.lyricObj;
 
