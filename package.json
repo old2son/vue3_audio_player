@@ -2,9 +2,9 @@
 	"name": "vue3_cli_default",
 	"version": "0.0.0",
 	"scripts": {
-		"dev": "vite",
+		"dev": "vite --mode development",
 		"start": "vite",
-		"build": "vite build",
+		"build": "vite build --mode production",
 		"serve": "vite preview"
 	},
 	"dependencies": {

@@ -17,7 +17,7 @@
 
                     <div class="progress-wrap">
                         <div class="bar js-bar">
-                            <div class="rdy js-progress-rdy"></div>
+                            <!-- <div class="rdy js-progress-rdy"></div> -->
                             <div class="cur js-progress-cur" :style="{'width': obj.musicProgress  + '%'}"></div>
                         </div>
                     </div>
@@ -32,8 +32,10 @@
 
     <in-audio 
         ref='childRef'
-        :showOk="isShow" 
-        :isPlay="isPlay" 
+        :isShow="isShow" 
+        :isPlay="isPlay"
+        :isSame="isSame"
+        :isRandom="isRandom"
         :obj="obj"
         @updateShowParam='updateShowParam'
         @updatePlayParam='updatePlayParam'
@@ -42,7 +44,7 @@
 </template>
 
 <script setup>
-import { ref, toRefs, reactive, onMounted, nextTick } from 'vue';
+import { ref, toRefs, reactive, onMounted, nextTick, computed } from 'vue';
 import axios from 'axios';
 import inAudio from '@/components/myAudio/inAudio.vue';
 
@@ -56,10 +58,14 @@ nextTick(() => {
     // childRef.value.changeType();   // 歌词变动 测试用
 });
 
-const isFirst = ref(true); // 首次加载音乐
-const isShow = ref(false); // 显示播放
-const isPlay = ref(false); // 播放
-const isMove = ref(false); // 拖拽
+const isFirst = ref(true);      // 首次加载音乐
+const isShow = ref(false);      // 显示播放
+const isPlay = ref(false);      // 播放
+const isSame = ref(false);      // 循环
+const isRandom = ref(false);    // 随机
+const isMove = ref(false);      // 拖拽
+const originList = ref([]);     // 原始列表
+const randomList = ref([]);     // 随机列表
 
 const obj = reactive({
     $audio: '',
@@ -92,16 +98,27 @@ const updateShowParam = (param) => {
 
 // 播放按钮处理
 const updatePlayParam = (param) => {
-    if (param === 1 || param === -1) {  // 切歌
-        obj.count += param;
-        obj.count = obj.count > obj.list.length - 1 ? 0 : (obj.count < 0 ? obj.list.length - 1 : obj.count);
-        obj.$barCur.style.width = 0;
-        isFirst.value = true;
-        isPlay.value = false;
-        setAudio();
+    switch(param) {
+        case 0: // 暂停/播放
+            audioPlay();
+            break;
+        case -1:
+        case 1: // 切歌
+            obj.count += param;
+            obj.count = obj.count > obj.list.length - 1 ? 0 : (obj.count < 0 ? obj.list.length - 1 : obj.count);
+            obj.$barCur.style.width = 0;
+            isFirst.value = true;
+            isPlay.value = false;
+            setAudio();
+            audioPlay();
+            break;
+        case 2:
+            isRandom.value = !isRandom.value;
+            break;
+        case 3:
+            isSame.value = !isSame.value;
+            break;
     }
-
-    audioPlay();
 }
 
 // 音乐播放条移动距离
@@ -114,7 +131,6 @@ const updateUsProgress = (inIsMove, time) => {
         });
 
         obj.musicProgress = (time / obj.$audio.duration) * 100;
-
     }
     else {
         obj.$audio.currentTime = time;
@@ -127,6 +143,7 @@ const getMusicList = () => {
     .then(res => {
         // obj.list = res.data.data;
         obj.list.push(...res.data.data);
+        originList.value = extend([], obj.list);
         setAudio();
     })
     .catch(err => {
@@ -146,6 +163,10 @@ const getTime = (myTime, callback) => {
 
     if (sec < 10) {
         sec = '0' + sec; 
+    }
+    else if (sec >= 60) {
+        sec = '00';
+        min += 1;
     }
 
     cb(hour, min, sec);
@@ -180,21 +201,21 @@ const setAudio = () => {
         // 播放位置改变
         $audio.addEventListener('timeupdate', function () {
             moveCurPos();
-            childRef.value.changeType(); // 歌词变动
+            childRef.value.changeType(); // 歌词更新
         });
 
         $audio.addEventListener('ended', function () {
-            // 重播
-            // if (!isMouseMove) {
-            //     obj.count = obj.count >= obj.list.length - 1 ? 0 : obj.count + 1;
-            //     $audio = null;
-            //     obj.$barCur.style.width = 0;
+            if (isRandom.value) {
+                !randomList.value.length ? randomList.value = extend([], shuffle(obj.list)) : randomList.value = [];
+            }
+            else {
+                !randomList.value.length ? obj.list = extend([], originList.value) : '';
+            }
 
-            //     setAudio();
-            // }
-            
-            obj.count = obj.count >= obj.list.length - 1 ? 0 : obj.count + 1;
-            obj.$audio = null;
+            if (!isSame.value) {
+                obj.count = obj.count >= obj.list.length - 1 ? 0 : obj.count + 1;
+            }
+
             obj.$barCur.style.width = 0;
             setAudio();
         });
@@ -253,9 +274,51 @@ const audioPlay = () => {
     }
 }
 
+const isArrEqual = (oldArr, newArr) => {
+    return oldArr.length === newArr.length && oldArr.every((ele) => newArr.includes(ele));
+};
+
+const shuffle = (list) => {
+    let arr = list;
+    let len = arr.length;
+    let i = len;
+    let j = 0;
+    let temp = null;
+
+    while (i--) {
+        j = Math.floor(Math.random() * (i + 1));
+        temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+
+    return arr;
+}
+
+const extend = (a, b) => {
+    for (var i in b) {
+        if (typeof b[i] === 'object' && b[i] !== null) {
+            a[i] = a[i] || {};
+            extend(a[i], b[i]);
+        } else {
+            a[i] = b[i];
+        }
+    }
+    return a;
+}
+
+// 已弃用
+// const originList = computed({
+//     get: () => {
+//         if (isRandom.value) {
+//             return extend([], obj.list);
+//         }
+//     },
+// 	// set: (val) => {},
+// });
+
 onMounted(() => {
     obj.$barCur = document.querySelector('.js-progress-cur');
-    // obj.$play = document.querySelector('.js-play');
     getMusicList();
 });
 </script>

@@ -226,11 +226,9 @@ body {
     .audio-time em {
         color: #a1a1a1;
     }
-
-    
 }
 
-.in-audio-warp {
+.in-audio-wrap {
     position: fixed;
     left: 0;
     right: 0;
@@ -240,6 +238,7 @@ body {
     overflow: auto;
     opacity: 0;
     transition: all 0.35s;
+    touch-action: none;
     background: linear-gradient(125deg, #504c4b, #2b292a, #121212) ;
     background-size: 400%;
 
@@ -317,9 +316,44 @@ body {
             width: pxtorem(40);
             height: pxtorem(40);
             transform: translateY(-50%);
-    
             background: url(@/assets/icon_speaker.png) center no-repeat;
             background-size: pxtorem(30);
+        }
+
+        .volume-bar {
+            position: absolute;
+            left: 50%;
+            top: pxtorem(-100);
+            width: pxtorem(10);
+            height: pxtorem(80);
+            border-radius: 40px;
+            transform: translateX(-50%);
+            box-shadow: 0 0 0px pxtorem(5) rgba(#666, 0.3);
+            background-size: pxtorem(30);
+            background-color: gray;
+        }
+
+        .volume-cur {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: pxtorem(10);
+            height: 100%;
+            border-radius: 40px;
+            transition: 0.2s;
+            background: #fff;
+
+            &::after {
+                position: absolute;
+                left: 50%;
+                top: pxtorem(-10);
+                content: '⭐';
+                width: pxtorem(30);
+                height: pxtorem(30);
+                line-height: pxtorem(30);
+                transform: translateX(-50%);
+                font-size: pxtorem(20);
+            }
         }
 
         .icon-heart {
@@ -447,6 +481,32 @@ body {
         .prev {
             background: url(@/assets/icon_prevsong.png) center no-repeat;
             background-size: 100%;
+        }
+
+        .random {
+            position: relative;
+            background: url(@/assets/icon_random.png) center no-repeat;
+            background-size: 100%;
+        }
+
+        .same {
+            background: url(@/assets/icon_repeat.png) center no-repeat;
+            background-size: 100%;
+        }
+
+        .music-state-active {
+            position: relative;
+            &::after {
+                position: absolute;
+                left: 50%;
+                bottom: pxtorem(-15);
+                content: '';
+                width: pxtorem(10);
+                height: pxtorem(10);
+                border-radius: 50%;
+                transform: translateX(-50%);
+                background: $text-positive;
+            }
         }
     }
 }
