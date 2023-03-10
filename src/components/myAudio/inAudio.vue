@@ -273,7 +273,32 @@ const musicTouchend = (event) => {
         document.querySelector('.js-outer-audio .js-progress-cur').style.width = width + '%';
     }
 
-    updateMusicProgress(false, getUsCurTime());
+    let time = getUsCurTime();
+    let item = showLyric.lyricObj;
+    Idx.value = getLyricsIndex(time);
+    let index = parseInt(liRef.value[Idx.value].dataset.index);
+    if (index <= 4) {
+        lyricTop.value = `0`; 
+    }
+    else if (index >= item.length - 5) {
+        lyricTop.value = `${-(liRef.value[Idx.value].offsetHeight * (item.length - 10))}px`; 
+    }
+    else {
+        lyricTop.value = `${-(liRef.value[Idx.value].offsetHeight * (index - 4))}px`; 
+    }
+    
+    updateMusicProgress(false, time);
+}
+
+const getLyricsIndex = (time) => {
+    for (let i = 0; i < liRef.value.length; i++) {
+        if (time <= liRef.value[i].dataset.time) {
+            return i - 1 <= 0 ? 0 : i - 1;
+        }
+        else if (time >= liRef.value[liRef.value.length - 1].dataset.time) {
+            return liRef.value.length - 1;
+        }
+    }
 }
 
 onBeforeUpdate(() => {
@@ -291,19 +316,20 @@ const setRef = (el) => {
 // todo: 歌词滚动处理
 // 歌词和播放时间处理
 const handleLyricTransform  = () => {
-
-    console.log('handleLyricTransform');
-
     let item = showLyric.lyricObj;
 
-    // 正在播放的索引
-    let index = parseInt(liRef.value[Idx.value].dataset.index);
-
-     // 歌词滚动结束
+    // 歌词滚动结束
     if (Idx.value >= item.length - 1) {
         lyricFlag.value = false;
         return;
     }
+
+    if (!liRef.value[Idx.value]) {
+        return;
+    }
+
+    // 正在播放的索引
+    let index = parseInt(liRef.value[Idx.value].dataset.index);
     
     // 播放时间 > 下一句歌词时间
     if (lyricFlag.value && props.obj.$audio.currentTime > item[[Idx.value + 1]].time) {
