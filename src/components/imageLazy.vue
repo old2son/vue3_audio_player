@@ -37,6 +37,7 @@ const noLazy = computed(() => {
 });
 
 const vLazy = {
+    // vue3 自动绑定 vLazy 指令， mounted 钩子函数
     mounted: (el, binding) => {
         // 非懒加载
         if (binding.value) {
@@ -47,4 +48,5 @@ const vLazy = {
         
     }
 }
+
 </script>

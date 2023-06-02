@@ -28,7 +28,7 @@
                         @click.prevent="isVolume ? isVolume = false : isVolume = true"
                     >
                         <span 
-                            class="volume-bar js-volume-bar"
+                            class="volume-bar"
                             ref="volumeRef"
                             v-show="isVolume"
                             @touchstart.prevent="volumeStart"
@@ -36,12 +36,12 @@
                             @touchend.prevent="volumeEnd"
                         >
                             <span 
-                                class="volume-cur js-volume-cur" 
+                                class="volume-cur" 
                                 :style="{'height': volume + '%'}"
                             ></span>
                         </span>
                     </dd>
-                    <dd class="icon-heart js-like">❤</dd>
+                    <dd class="icon-heart" :class="{'on' : isLike}" @click="isLike = !isLike">❤</dd>
                 </dl>
 
                 <div class="us-audio js-usaudio">
@@ -136,6 +136,8 @@ const props = defineProps({
     obj: {} // 歌曲信息
 });
 
+const isLike = ref(false);
+
 const isMove = ref(false);      // 圆圈是否移动
 const lyricFlag = ref(true);    // 是否歌词滚动
 const lyricTop = ref(0);        // 歌词距离
@@ -183,7 +185,8 @@ const hengtiao = () => {
     let $wrap = document.querySelector('.js-usaudio');
     let $bar = $wrap.querySelector('.js-bar');
     return (pos.startX - $bar.getBoundingClientRect().left) / $bar.offsetWidth * 100;
-} 
+}
+
 
 // 获取当前播放时间
 const getUsCurTime = () => {

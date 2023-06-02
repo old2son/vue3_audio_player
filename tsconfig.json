@@ -1,5 +1,14 @@
 {
     "compilerOptions": {
+        "outDir": "build",
         "allowJs": true
-    }
+    },
+    "include": [
+        "src/**/*.ts",
+        "src/**/*.js"
+    ],
+    "exclude": [
+        "node_modules",
+        "build/**/*",
+    ]
 }
