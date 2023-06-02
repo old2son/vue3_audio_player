@@ -3,10 +3,10 @@
         <template #test>
             <tabbar-item path="/home">
                 <template #item-icon>
-                    <i class="icon-sharkfins-grey"></i>
+                    <i class="icon-home-grey"></i>
                 </template>
                 <template #item-icon-active>
-                    <i class="icon-sharkfins-white"></i>
+                    <i class="icon-home-white"></i>
                 </template>
                 <template v-slot:item-text>首页</template>
             </tabbar-item>

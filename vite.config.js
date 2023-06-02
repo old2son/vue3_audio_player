@@ -23,9 +23,6 @@ export default defineConfig(({ mode }) => {
 			},
 		},
 		css: {
-			postcss: {
-				plugins: [],
-			},
 			preprocessorOptions: {
 				// scss: {
 				// 	additionalData: `@import '@/styles/_variable.scss';`, // 全局变量获取

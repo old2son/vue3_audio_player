@@ -45,7 +45,15 @@ const vLazy = {
         }
 
         // 懒加载
-        
+        const io = new IntersectionObserver((entries) => {
+            const realSrc = el.dataset.src;
+            if (entries[0].isIntersecting) {
+                // 进入可视区，去掉监听
+                el.src = realSrc;
+                io.unobserve(el);
+            }
+        });
+        io.observe(el);
     }
 }
 

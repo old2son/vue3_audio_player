@@ -52,9 +52,9 @@ body {
         transform: translateX(-50%);
     }
 
-    .icon-sharkfins-grey {
+    .icon-home-grey {
         opacity: 0.8;
-        background: url(@/assets/icon_sharkfins_grey.png) center no-repeat;
+        background: url(@/assets/icon_home_grey.png) center no-repeat;
         background-size: 100%;
     }
 
@@ -70,8 +70,8 @@ body {
         background-size: 100%;
     }
 
-    .icon-sharkfins-white {
-        background: url(@/assets/icon_sharkfins_grey.png) center no-repeat;
+    .icon-home-white {
+        background: url(@/assets/icon_home_white.png) center no-repeat;
         background-size: 100%;
     }
 
@@ -552,20 +552,12 @@ body {
         dl {
             display: flex;
             align-items: center;
-            width: 50%;
+            width: 48%;
             height: pxtorem(100);
             margin: pxtorem(30) 0 ;
             overflow: hidden;
             border-radius: pxtorem(10);
             box-shadow: 1px 1px 1px 1px rgba(#000, 0.1);
-
-            &:nth-of-type(2n-1) {
-                padding-right: pxtorem(10);
-            }
-
-            &:nth-of-type(2n) {
-                padding-left: pxtorem(10);
-            }
         }
 
         dt {
@@ -584,4 +576,17 @@ body {
             background-color: #2a2a2a;
         }
     }
+}
+
+// 搜索框样式
+.search-form-wrap {
+    position: relative;
+    height: pxtorem(80);
+    margin: pxtorem(20);
+    border-radius: pxtorem(40);
+    background-color: #2a2a2a;
+}
+
+.search-cont {
+    padding-bottom: pxtorem(400);
 }
