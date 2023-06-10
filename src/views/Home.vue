@@ -19,6 +19,7 @@
         </div>
     </div>
 </template>
+
 <script setup>
 import { ref, toRefs, reactive, onMounted } from 'vue';
 import axios from 'axios';
@@ -44,6 +45,5 @@ onMounted(() => {
 });
 
 </script>
-<style scoped>
 
-</style>
+<style scoped></style>

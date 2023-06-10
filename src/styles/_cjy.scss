@@ -6,6 +6,7 @@ body {
 
 .pb-container {
     height: 100%;
+    overflow: hidden;
     background: linear-gradient(180deg, #504c4b 0%, #2b292a 30%, #121212 50%) ;
 }
 
@@ -585,8 +586,60 @@ body {
     margin: pxtorem(20);
     border-radius: pxtorem(40);
     background-color: #2a2a2a;
+    
+    .search-input {
+        position: absolute;
+        left: pxtorem(20);
+        top: 50%;
+        width: pxtorem(600);
+        height: pxtorem(60);
+        transform: translateY(-50%);
+        border: none;
+        outline: none;
+        background-color: transparent;
+        color: #fff;
+        font-size: pxtorem(24);
+    }
+    
+    .btn-search {
+        position: absolute;
+        right: pxtorem(20);
+        top: 50%;
+        width: pxtorem(60);
+        height: pxtorem(60);
+        border: 0;
+        border-radius: 50%;
+        transform: translateY(-50%);
+        color: #333;
+        background-color: #fff;
+    }
 }
 
 .search-cont {
+    display: flex;
+    flex-wrap: wrap;
     padding-bottom: pxtorem(400);
+    padding: pxtorem(30);
+
+    dl {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        width: 33.33%;
+        margin-bottom: pxtorem(20);
+    }
+
+    dt {
+        min-width: 100px;
+        min-height: 100px;
+    }
+
+    dd {
+        flex-basis: 100%;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        text-align: center;
+        color: rgba(#fff, 0.8);
+    }
 }

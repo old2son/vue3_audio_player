@@ -34,9 +34,6 @@
 <script setup>
 import tabbar from '@/common/tabbar/tabbar.vue';
 import tabbarItem from '@/common/tabbar/tabbarItem.vue';
-
-
 </script>
-<style scoped>
 
-</style>
+<style scoped></style>

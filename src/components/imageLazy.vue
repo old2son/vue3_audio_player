@@ -1,12 +1,11 @@
 <template>
     <div class="img-wrap">
         <img 
-            v-if="src"
+            src="@/assets/none.png"
             :data-src="src"
             :alt="alt"
             v-lazy="noLazy"
         >
-        <img v-else src="@/assets/none.png" alt="miss image">
     </div>
 </template>
 <script setup>

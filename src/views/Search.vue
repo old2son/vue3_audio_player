@@ -2,8 +2,8 @@
 	<!-- 阻止跳转 -->
 	<div class="search-form-wrap">
 		<form @submit.prevent="search">
-			<input type="text" placeholder="Search Google" v-model="obj.searchVal" />
-			<input type="submit" value="Search" />
+			<input type="text" class="search-input" placeholder="Search demo" v-model="obj.searchVal" />
+			<input type="submit" class="btn-search" value="S" />
 		</form>
 	</div>
 
