@@ -1,23 +1,3 @@
-<template>
-	<div class="tab">
-		<div class="tab-item" :class="{ active: state.type === 0 }" @click="state.type = 0">TabA</div>
-		<div class="tab-item" :class="{ active: state.type === 1 }" @click="state.type = 1">TabB</div>
-	</div>
-	<div class="tab" v-show="state.type === 0">
-		<div class="tab-item" :class="{ active: state.tabA === 0 }" @click="state.tabA = 0">TabA1</div>
-		<div class="tab-item" :class="{ active: state.tabA === 1 }" @click="state.tabA = 1">TabA2</div>
-		<div class="tab-item" :class="{ active: state.tabA === 2 }" @click="state.tabA = 2">TabA3</div>
-	</div>
-	<div class="tab" v-show="state.type === 1">
-		<div class="tab-item" :class="{ active: state.tabB === 0 }" @click="state.tabB = 0">TabB1</div>
-		<div class="tab-item" :class="{ active: state.tabB === 1 }" @click="state.tabB = 1">TabB2</div>
-		<div class="tab-item" :class="{ active: state.tabB === 2 }" @click="state.tabB = 2">TabB3</div>
-	</div>
-
-	<keepAlive>
-		<component :is="current" :tab="state.tabA"></component>
-	</keepAlive>
-</template>
 <script setup>
 import { reactive, KeepAlive, computed } from 'vue';
 import tabListA from '@/components/tabListA.vue';
@@ -38,6 +18,28 @@ const current = computed(() => {
     }
 });
 </script>
+
+<template>
+	<div class="tab">
+		<div class="tab-item" :class="{ active: state.type === 0 }" @click="state.type = 0">TabA</div>
+		<div class="tab-item" :class="{ active: state.type === 1 }" @click="state.type = 1">TabB</div>
+	</div>
+	<div class="tab" v-show="state.type === 0">
+		<div class="tab-item" :class="{ active: state.tabA === 0 }" @click="state.tabA = 0">TabA1</div>
+		<div class="tab-item" :class="{ active: state.tabA === 1 }" @click="state.tabA = 1">TabA2</div>
+		<div class="tab-item" :class="{ active: state.tabA === 2 }" @click="state.tabA = 2">TabA3</div>
+	</div>
+	<div class="tab" v-show="state.type === 1">
+		<div class="tab-item" :class="{ active: state.tabB === 0 }" @click="state.tabB = 0">TabB1</div>
+		<div class="tab-item" :class="{ active: state.tabB === 1 }" @click="state.tabB = 1">TabB2</div>
+		<div class="tab-item" :class="{ active: state.tabB === 2 }" @click="state.tabB = 2">TabB3</div>
+	</div>
+
+	<keepAlive>
+		<component :is="current" :tab="state.tabA"></component>
+	</keepAlive>
+</template>
+
 <style>
 .tab {
 	display: flex;
